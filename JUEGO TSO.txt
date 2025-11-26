@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# --- Configuración del Juego ---
+PUNTOS=0
+PREGUNTAS_TOTALES=8
+
+# Array con las preguntas, respuestas correctas y explicaciones
+declare -a PREGUNTAS
+declare -a RESPUESTAS
+declare -a EXPLICACIONES
+
+# P1: ¿Qué comando se usa para buscar texto dentro de un archivo usando patrones (expresiones regulares)?
+PREGUNTAS[0]="¿Qué comando se usa para buscar texto dentro de un archivo usando patrones (expresiones regulares)?"
+RESPUESTAS[0]="grep"
+EXPLICACIONES[0]="El comando 'grep' (Global Regular Expression Print) se usa para buscar líneas que coincidan con un patrón."
+
+# P2: ¿Qué comando se usa para mostrar las últimas 10 líneas de un archivo por defecto?"
+PREGUNTAS[1]="¿Qué comando se usa para mostrar las últimas 10 líneas de un archivo por defecto?"
+RESPUESTAS[1]="tail"
+EXPLICACIONES[1]="El comando 'tail' muestra el final de un archivo. Usa 'tail -n N' para mostrar las últimas N líneas."
+
+# P3: ¿Qué comando se usa para ordenar las líneas de un archivo numéricamente de mayor a menor?"
+PREGUNTAS[2]="¿Qué comando se usa para ordenar las líneas de un archivo numéricamente de mayor a menor?"
+RESPUESTAS[2]="sort -nr"
+EXPLICACIONES[2]="La combinación 'sort -nr' utiliza el flag '-n' (numérico) y '-r' (reversa) para ordenar de mayor a menor."
+
+# P4: ¿Qué comando usarías para reemplazar todas las apariciones de la palabra 'antiguo' por 'nuevo' en un archivo?"
+PREGUNTAS[3]="¿Qué comando usarías para reemplazar todas las apariciones de la palabra 'antiguo' por 'nuevo' en un archivo?"
+RESPUESTAS[3]="sed"
+EXPLICACIONES[3]="El comando 'sed' (Stream Editor) es perfecto para operaciones de búsqueda y reemplazo como 'sed s/antiguo/nuevo/g'."
+
+# P5: ¿Qué comando se usa para cambiar los permisos de un archivo o directorio?"
+PREGUNTAS[4]="¿Qué comando se usa para cambiar los permisos (lectura, escritura, ejecución) de un archivo o directorio?"
+RESPUESTAS[4]="chmod"
+EXPLICACIONES[4]="El comando 'chmod' (Change Mode) modifica los permisos de acceso de archivos y directorios."
+
+# P6: ¿Qué comando se usa para imprimir cada campo de un archivo de texto como si fuera una base de datos?"
+PREGUNTAS[5]="¿Qué comando se usa para imprimir cada campo (columna) de un archivo de texto como si fuera una base de datos?"
+RESPUESTAS[5]="awk"
+EXPLICACIONES[5]="El comando 'awk' es un lenguaje de programación diseñado para el procesamiento de archivos de texto basado en patrones y campos (columnas)."
+
+# P7: ¿Qué comando elimina líneas duplicadas (repetidas) en un archivo, pero solo si están una al lado de la otra?"
+PREGUNTAS[6]="¿Qué comando elimina líneas duplicadas (repetidas) en un archivo, pero solo si están una al lado de la otra?"
+RESPUESTAS[6]="uniq"
+EXPLICACIONES[6]="El comando 'uniq' filtra líneas adyacentes repetidas. Para eliminar duplicados de todo el archivo, primero debes usar 'sort | uniq'."
+
+# P8: ¿Qué comando utilizarías para buscar todos los archivos .txt que tengan más de 1MB de tamaño en el directorio actual y sus subdirectorios?"
+PREGUNTAS[7]="¿Qué comando utilizarías para buscar archivos específicos por criterios (nombre, tamaño, tiempo) en una jerarquía de directorios?"
+RESPUESTAS[7]="find"
+EXPLICACIONES[7]="El comando 'find' es la herramienta estándar para buscar archivos en el sistema de archivos de Linux."
+
+# --- Lógica del Juego ---
+iniciar_juego() {
+    echo "=========================================="
+    echo "       🐧 BASH COMMAND TRIVIA! 🐧"
+    echo "  Responde 8 preguntas sobre comandos BASH."
+    echo "=========================================="
+
+    for i in $(seq 0 $((PREGUNTAS_TOTALES - 1))); do
+        
+        echo -e "\n--- Pregunta $((i+1)) de $PREGUNTAS_TOTALES ---"
+        echo "${PREGUNTAS[i]}"
+        echo -n "Tu respuesta (ej. grep, sed, sort -nr): "
+        read RESPUESTA_USUARIO
+
+        # Quitar espacios y convertir a minúsculas para una comparación más flexible
+        RESPUESTA_USUARIO_NORMALIZADA=$(echo "$RESPUESTA_USUARIO" | tr -d ' ' | tr '[:upper:]' '[:lower:]')
+        RESPUESTA_CORRECTA_NORMALIZADA=$(echo "${RESPUESTAS[i]}" | tr -d ' ' | tr '[:upper:]' '[:lower:]')
+
+        # Validar la respuesta
+        if [ "$RESPUESTA_USUARIO_NORMALIZADA" = "$RESPUESTA_CORRECTA_NORMALIZADA" ]; then
+            echo "✅ ¡Correcto! +1 punto."
+            PUNTOS=$((PUNTOS + 1))
+        else
+            echo "❌ ¡Incorrecto!"
+        fi
+        
+        # Explicación
+        echo "💡 Respuesta correcta: ${RESPUESTAS[i]}"
+        echo "   (Explicación: ${EXPLICACIONES[i]})"
+
+    done
+
+    # --- Resultados Finales ---
+    echo -e "\n=========================================="
+    echo "         🎉 Fin del Juego 🎉"
+    echo "=========================================="
+    echo "Tu puntaje final es: $PUNTOS de $PREGUNTAS_TOTALES."
+    
+    if [ $PUNTOS -ge 7 ]; then
+        echo "¡Eres un maestro de BASH! 🧑‍💻"
+    elif [ $PUNTOS -ge 4 ]; then
+        echo "¡Buen conocimiento de BASH! Sigue practicando. 💪"
+    else
+        echo "Necesitas revisar los comandos básicos. ¡A practicar! 😉"
+    fi
+    echo "=========================================="
+}
+
+# Iniciar el juego
+iniciar_juego
